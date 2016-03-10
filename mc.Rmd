@@ -1,0 +1,60 @@
+---
+title: "MC"
+author: "Vaclav Haisman"
+date: "10 března 2016"
+output: pdf_document
+---
+
+```{r, echo=FALSE}
+library(knitr)
+library(sqldf)
+library(tcltk)
+#library(gsubfn)
+#library(proto)
+#library(RSQLite)
+#library(DBI)
+library(ggplot2)
+library(ppls)
+```
+
+```{r pressure, echo=FALSE}
+years <- rep(2010:2015, each=12)
+
+months <- rep(1:12, 6)
+
+applicants <- c(14970, 16695, 18150, 14490, 14175, 15060, 15475, 17535, 20545, 22270, 20055, 18960,
+  17820, 19360, 21955, 19845, 25045, 22935, 22385, 22545, 23975, 23375, 22685, 21300,
+  20345, 18915, 19610, 17765, 20175, 20385, 23405, 24080, 26650, 33745, 29515, 23685,
+  25840, 23290, 25485, 28825, 29875, 31575, 33625, 31580, 36870, 40745, 35405, 29740,
+  35775, 31020, 32925, 34820, 38885, 41420, 51480, 50180, 61755, 62945, 58690, 62780,
+  61450, 66150, 61940, 59085, 68090, 90140, 116200, 141250, 165305, 167060, 154605, 104360)
+
+# y2010=c(14970, 16695, 18150, 14490, 14175, 15060, 15475, 17535, 20545, 22270, 20055, 18960),
+#   y2011=c(17820, 19360, 21955, 19845, 25045, 22935, 22385, 22545, 23975, 23375, 22685, 21300),
+#   y2012=c(20345, 18915, 19610, 17765, 20175, 20385, 23405, 24080, 26650, 33745, 29515, 23685),
+#   y2013=c(25840, 23290, 25485, 28825, 29875, 31575, 33625, 31580, 36870, 40745, 35405, 29740),
+#   y2014=c(35775, 31020, 32925, 34820, 38885, 41420, 51480, 50180, 61755, 62945, 58690, 62780),
+#   y2015=c(61450, 66150, 61940, 59085, 68090, 90140, 116200, 141250, 165305, 167060, 154605, 104360)
+
+ftaDF <- data.frame(years, months, applicants)
+
+ftaNormDF <- sqldf(
+  "SELECT t2.years AS years, t2.months AS months, mi.mi, ma.ma, ((t2.applicants - mi.mi) / (ma.ma - mi.mi)) AS normYearApplicants
+    FROM ftaDF t2
+    JOIN (SELECT MIN(applicants) AS mi, years FROM ftaDF t2 GROUP BY t2.years) mi USING (years)
+    JOIN (SELECT MAX(applicants) AS ma, years FROM ftaDF t2 GROUP BY t2.years) ma USING (years)")
+
+frame()
+ggplot(ftaDF, aes(x = factor(months), y = applicants / 1000, group = years, color = factor(years))) +
+  geom_point() +
+  geom_line() +
+  labs(color = "years", x = "month", y = "thousands of first time applicants",
+       title = "EU-28 first time asylum applicants")
+
+frame()
+ggplot(ftaNormDF, aes(x = factor(months), y = normYearApplicants, group = years, color = factor(years))) +
+  geom_point() +
+  geom_line() +
+  labs(color = "years", x = "month", y = "per year normalized applicants",
+       title = "EU-28 first time asylum applicants (per year normalized)")
+```

@@ -42,7 +42,8 @@ ftaNormDF <- sqldf(
 
 ## EU-28 first time asylum applicants
 
-This chart shows first time asylum applicants each year since 2010. The data is taken from [Eurostat](http://appsso.eurostat.ec.europa.eu/nui/show.do?query=BOOKMARK_DS-055296_QID_4470A6E0_UID_-3F171EB0&layout=TIME,C,X,0;GEO,L,Y,0;CITIZEN,L,Z,0;SEX,L,Z,1;AGE,L,Z,2;ASYL_APP,L,Z,3;UNIT,L,Z,4;INDICATORS,C,Z,5;&zSelection=DS-055296ASYL_APP,ASY_APP;DS-055296UNIT,PER;DS-055296CITIZEN,EXT_EU28;DS-055296INDICATORS,OBS_FLAG;DS-055296AGE,TOTAL;DS-055296SEX,T;&rankName1=UNIT_1_2_-1_2&rankName2=AGE_1_2_-1_2&rankName3=CITIZEN_1_2_-1_2&rankName4=INDICATORS_1_2_-1_2&rankName5=ASYL-APP_1_2_-1_2&rankName6=SEX_1_2_-1_2&rankName7=TIME_1_0_0_0&rankName8=GEO_1_2_0_1&sortC=ASC_-1_FIRST&rStp=&cStp=&rDCh=&cDCh=&rDM=true&cDM=true&footnes=false&empty=false&wai=false&time_mode=NONE&time_most_recent=false&lang=EN&cfo=%23%23%23%2C%23%23%23.%23%23%23).
+This chart shows first time asylum applicants each year since 2010.
+The data is taken from [Eurostat][] (see [Appendix 1](#appendix-1)).
 
 ```{r, echo=FALSE, fig.align='center', fig.height=3}
 ggplot(ftaDF, aes(x = factor(months), y = applicants / 1000, group = years, color = factor(years))) +
@@ -61,3 +62,13 @@ ggplot(ftaNormDF, aes(x = factor(months), y = normYearApplicants, group = years,
   labs(color = "years", x = "month", y = "per year normalized applicants",
        title = "EU-28 first time asylum applicants (per year normalized)")
 ```
+
+# Appendix 1 -- Data -- EU-28 first time asylum applicants {#appendix-1}
+
+The data is taken from [Eurostat][].
+
+```{r, echo=FALSE, fig.align='center', fig.height=3}
+kable(ftaDF[, c("years", "months", "applicants")], row.names = FALSE)
+```
+
+[Eurostat]: http://appsso.eurostat.ec.europa.eu/nui/show.do?query=BOOKMARK_DS-055296_QID_4470A6E0_UID_-3F171EB0&layout=TIME,C,X,0;GEO,L,Y,0;CITIZEN,L,Z,0;SEX,L,Z,1;AGE,L,Z,2;ASYL_APP,L,Z,3;UNIT,L,Z,4;INDICATORS,C,Z,5;&zSelection=DS-055296ASYL_APP,ASY_APP;DS-055296UNIT,PER;DS-055296CITIZEN,EXT_EU28;DS-055296INDICATORS,OBS_FLAG;DS-055296AGE,TOTAL;DS-055296SEX,T;&rankName1=UNIT_1_2_-1_2&rankName2=AGE_1_2_-1_2&rankName3=CITIZEN_1_2_-1_2&rankName4=INDICATORS_1_2_-1_2&rankName5=ASYL-APP_1_2_-1_2&rankName6=SEX_1_2_-1_2&rankName7=TIME_1_0_0_0&rankName8=GEO_1_2_0_1&sortC=ASC_-1_FIRST&rStp=&cStp=&rDCh=&cDCh=&rDM=true&cDM=true&footnes=false&empty=false&wai=false&time_mode=NONE&time_most_recent=false&lang=EN&cfo=%23%23%23%2C%23%23%23.%23%23%23
